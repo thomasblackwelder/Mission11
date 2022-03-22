@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Mission7.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,42 @@ namespace Mission7.Controllers
     {
 
         private UserManager<IdentityUser> userManager;
-        public IActionResult Login()
+        private SignInManager<IdentityUser> signInManager;
+
+        public AccountController(UserManager<IdentityUser> um, SignInManager<IdentityUser> sim)
         {
-            return View();
+            this.userManager = um;
+            this.signInManager = sim;
+        }
+
+        [HttpGet]
+        public IActionResult Login(string returnUrl)
+        {
+            return View(new LoginModel { ReturnUrl = returnUrl });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login (LoginModel loginModel)
+        {
+            if (ModelState.IsValid)
+            {
+                IdentityUser user = await userManager.FindByNameAsync(loginModel.Username);
+
+
+                if (user != null)
+                {
+                    await signInManager.SignOutAsync();
+
+                    if ((await signInManager.PasswordSignInAsync(user, loginModel.Password, false, false)).Succeeded)
+                    {
+                        return Redirect(loginModel?.ReturnUrl ?? "/Admin");
+                    }
+                }
+
+                ModelState.AddModelError("", "Invalid name or password");
+                return View(loginModel);
+            }
+
         }
     }
 }
