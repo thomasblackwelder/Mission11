@@ -1,4 +1,5 @@
 ﻿@{
+    Layout = null;
 }
 
 @model LoginModel
@@ -13,7 +14,7 @@
 <body>
 
     <div class="bg-dark text-white p-2">
-        <span class="navbar-brand m-l-2">BOOKSTORE</span>
+        <span class="navbar-brand m-l-2">Please Log In</span>
     </div>
 
     <div class="m-1 p-1">
@@ -29,7 +30,7 @@
 
             <div class="form-group">
                 <label asp-for="Password">Password:</label>
-                <input asp-for="Password" class="form-control" />
+                <input asp-for="Password" class="form-control" type="password" />
             </div>
 
             <button class="btn btn-primary" type="submit">Log In</button>

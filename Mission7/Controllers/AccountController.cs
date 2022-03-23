@@ -21,7 +21,7 @@ namespace Mission7.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(string returnUrl)
+        public IActionResult Login (string returnUrl)
         {
             return View(new LoginModel { ReturnUrl = returnUrl });
         }
@@ -44,10 +44,20 @@ namespace Mission7.Controllers
                     }
                 }
 
-                ModelState.AddModelError("", "Invalid name or password");
-                return View(loginModel);
             }
-
+                      
+            ModelState.AddModelError("", "Invalid name or password");
+            return View(loginModel);
+            
         }
+
+        public async Task<RedirectResult> Logout (string returnUrl = "/")
+        {
+            await signInManager.SignOutAsync();
+
+            return Redirect(returnUrl);
+        }
+
+
     }
 }
